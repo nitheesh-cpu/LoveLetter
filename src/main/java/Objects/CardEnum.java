@@ -1,4 +1,5 @@
 package Objects;
 
 public enum CardEnum {
+    SPY, GUARD, PRIEST, BARON, CHANCELLOR, HANDMAID, PRINCE, KING, COUNTESS, PRINCESS
 }
