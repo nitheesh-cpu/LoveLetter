@@ -62,6 +62,11 @@ public class GamePanel extends JFrame {
 
         revalidate();
 
+//        JFrame frame = new JFrame();
+//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        frame.setSize(500, 500);
+//        frame.setVisible(true);
+
         draw.addActionListener(e -> {
             ImageIcon card = Initialize.cardImages[Initialize.cardMap.get(GameState.getDeck().get(0).getCardType())]; //gets card image from deck
             Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
