@@ -38,35 +38,35 @@ public class GamePanel extends JFrame {
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JLabel turn = new JLabel("Player 1 Turn");
-        turn.setFont(new Font("Arial", Font.BOLD, 30));
-        turn.setForeground(Color.BLACK);
+        JLabel turn = new JLabel("Player 1 Turn"); //player turn
+        turn.setFont(new Font("Arial", Font.BOLD, 30)); //makes text bigger
+        turn.setForeground(Color.BLACK); //text color
         turn.setLocation(10, 10);
         turn.setSize(200, 35);
         gameWindow.add(turn);
 
-        backCard = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg"));
-        Image resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH);
-        back = new JButton(new ImageIcon(resized));
-        back.setVisible(false);
-        back.setLocation(15, 403);
-        back.setSize(114, 159);
+        backCard = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg")); //back of card
+        Image resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
+        back = new JButton(new ImageIcon(resized)); //adds card to button
+        back.setVisible(false); //hides card
+        back.setLocation(15, 403); //sets location
+        back.setSize(114, 159); //sets size
         gameWindow.add(back);
 
-        ImageIcon backCardd = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg"));
-        resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH);
-        JButton draw = new JButton(new ImageIcon(resized));
-        draw.setLocation(200, 165);
-        draw.setSize(114, 159);
+        ImageIcon backCardd = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg")); //back of card
+        resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
+        JButton draw = new JButton(new ImageIcon(resized)); //adds card to button
+        draw.setLocation(200, 165); //sets location
+        draw.setSize(114, 159); //sets size
         gameWindow.add(draw);
 
         revalidate();
 
         draw.addActionListener(e -> {
-            ImageIcon card = Initialize.cardImages[Initialize.cardMap.get(GameState.getDeck().get(0).getCardType())];
-            Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH);
-            back.setIcon(new ImageIcon(resize));
-            back.setVisible(true);
+            ImageIcon card = Initialize.cardImages[Initialize.cardMap.get(GameState.getDeck().get(0).getCardType())]; //gets card image from deck
+            Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
+            back.setIcon(new ImageIcon(resize)); //adds card to button
+            back.setVisible(true); //shows card
         });
 
 
