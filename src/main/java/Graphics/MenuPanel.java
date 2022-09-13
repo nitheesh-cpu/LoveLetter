@@ -50,10 +50,10 @@ public class MenuPanel extends JFrame{
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLocation(240, 210);
-        buttonPanel.setSize(100, 30);
+        buttonPanel.setSize(100, 40);
         playButton = new JButton("Play Game");
         playButton.setLocation(125, 210);
-        playButton.setSize(100, 30);
+        playButton.setSize(100, 40);
         win.add(buttonPanel);
         buttonPanel.add(playButton);
 
@@ -77,4 +77,5 @@ public class MenuPanel extends JFrame{
         });
 
     }
+
 }

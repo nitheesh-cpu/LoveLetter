@@ -1,4 +1,5 @@
 package Game;
+import Graphics.GamePanel;
 import Objects.Card;
 import Objects.CardEnum;
 import Objects.Player;
@@ -13,6 +14,7 @@ public class GameState {
     private ArrayList<Card> cardOnTable;
     private Player[] players;
 
+    private GamePanel hehe;
     public GameState(int amtPlayers) {
         this.amtPlayers = amtPlayers; //set amount of players
         deck = initCards(); //initialize deck
@@ -23,6 +25,8 @@ public class GameState {
             players[i] = new Player(i); //create player
             players[i].addCard(deck.remove(0)); //deal card to player
         }
+        hehe = new GamePanel();
+
 
     }
 
