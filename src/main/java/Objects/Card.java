@@ -7,4 +7,11 @@ public class Card {
         this.cardType = cardType;
     }
 
+    public CardEnum getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(CardEnum cardType) {
+        this.cardType = cardType;
+    }
 }

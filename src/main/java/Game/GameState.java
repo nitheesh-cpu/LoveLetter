@@ -10,12 +10,13 @@ import java.util.Stack;
 
 public class GameState {
     private int amtPlayers;
-    private ArrayList<Card> deck;
+    private static ArrayList<Card> deck;
     private ArrayList<Card> cardOnTable;
     private Player[] players;
 
     private GamePanel hehe;
     public GameState(int amtPlayers) {
+        Initialize.init(this);
         this.amtPlayers = amtPlayers; //set amount of players
         deck = initCards(); //initialize deck
         cardOnTable = new ArrayList<>(); //initialize card on table
@@ -51,6 +52,10 @@ public class GameState {
         deck.add(new Card(CardEnum.CHANCELLOR));
         deck.add(new Card(CardEnum.CHANCELLOR));
         Collections.shuffle(deck);
+        return deck;
+    }
+
+    public static ArrayList<Card> getDeck() {
         return deck;
     }
 }
