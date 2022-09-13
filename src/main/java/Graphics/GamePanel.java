@@ -7,7 +7,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class GamePanel extends JFrame {
-    private Icon backCard;
+    private final Icon backCard;
     private JButton back;
     public GamePanel() {
         super("LoveLetterGame");
