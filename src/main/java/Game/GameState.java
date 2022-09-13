@@ -27,11 +27,7 @@ public class GameState {
             players[i].addCard(deck.remove(0)); //deal card to player
         }
         hehe = new GamePanel();
-
-
     }
-
-
 
     public ArrayList<Card> initCards() {
         deck = new ArrayList<>();
