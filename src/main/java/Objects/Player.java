@@ -17,6 +17,11 @@ public class Player {
         points = 0;
     }
 
+    public void discardCard(Card card){
+        card.useCard();
+        discardCard.add(card);
+    }
+
     public ArrayList<Card> getPlayerHand() {
         return playerHand;
     }

@@ -14,11 +14,11 @@ public enum CardEnum {
             case BARON:
                 return 3;
             case CHANCELLOR:
-                return 4;
-            case HANDMAID:
-                return 5;
-            case PRINCE:
                 return 6;
+            case HANDMAID:
+                return 4;
+            case PRINCE:
+                return 5;
             case KING:
                 return 7;
             case COUNTESS:

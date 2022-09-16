@@ -179,6 +179,83 @@ public class GameState {
         }
     }
 
+    public static void showPrincessAbility(){
+        JFrame frame = new JFrame("Princess Ability");
+        JOptionPane.showMessageDialog(frame, "You are out!");
+        currentPlayer.setOut(true);
+    }
+
+    public static void showChancellorAbility(){
+        JFrame frame = new JFrame("Chancellor Ability");
+        JOptionPane.showMessageDialog(frame, "You can draw the top 2 cards of the deck!");
+        int amtCards = 2;
+        if(deck.size() == 1) {
+            currentPlayer.getPlayerHand().add(deck.get(0));
+            deck.remove(0);
+            amtCards--;
+        }
+        if(deck.size() == 0) {
+            JOptionPane.showMessageDialog(frame, "There are no more cards in the deck! This card has no effect!");
+        }
+        currentPlayer.getPlayerHand().add(deck.remove(0));
+        currentPlayer.getPlayerHand().add(deck.remove(0));
+        String[] playerCards = new String[currentPlayer.getPlayerHand().size()];
+        for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
+            playerCards[i] = currentPlayer.getPlayerHand().get(i).getCardType().toString();
+        }
+        String cardInput = (String) JOptionPane.showInputDialog(frame, "Choose a card to discard", "Chancellor Ability", JOptionPane.QUESTION_MESSAGE, null, playerCards, playerCards[0]);
+        //show input until player chooses a card
+        while (cardInput == null) {
+            cardInput = (String) JOptionPane.showInputDialog(frame, "Choose a card to discard", "Chancellor Ability", JOptionPane.QUESTION_MESSAGE, null, playerCards, playerCards[0]);
+        }
+        //remove card from hand
+        for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
+            if(currentPlayer.getPlayerHand().get(i).getCardType().toString().equals(cardInput)) {
+                currentPlayer.discardCard((currentPlayer.getPlayerHand().get(i)));
+                break;
+            }
+        }
+        if(amtCards == 2) {
+            String[] playerCards2 = new String[currentPlayer.getPlayerHand().size()];
+            for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
+                playerCards2[i] = currentPlayer.getPlayerHand().get(i).getCardType().toString();
+            }
+
+            String cardInput2 = (String) JOptionPane.showInputDialog(frame, "Choose a card to discard", "Chancellor Ability", JOptionPane.QUESTION_MESSAGE, null, playerCards2, playerCards2[0]);
+            //show input until player chooses a card
+            while (cardInput2 == null) {
+                cardInput2 = (String) JOptionPane.showInputDialog(frame, "Choose a card to discard", "Chancellor Ability", JOptionPane.QUESTION_MESSAGE, null, playerCards2, playerCards2[0]);
+            }
+            //remove card from hand
+            for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
+                if (currentPlayer.getPlayerHand().get(i).getCardType().toString().equals(cardInput2)) {
+                    currentPlayer.discardCard((currentPlayer.getPlayerHand().get(i)));
+                    break;
+                }
+            }
+        }
+
+    }
+
+    public static void showKingAbility(){
+        JFrame frame = new JFrame("King Ability");
+        String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        for (int i = 0; i < GameState.getAmtPlayers(); i++) {
+            if(i != currentPlayer.getNumber()) {
+                playerNums[i] = "Player " + (i+1);
+            }
+        }
+        String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "King Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        //show input until player chooses a player
+        while (playerInput == null) {
+            playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "King Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        }
+        int playerNum = Integer.parseInt(playerInput.substring(7))-1;
+        Card temp = currentPlayer.getPlayerHand().get(0);
+        currentPlayer.getPlayerHand().set(0, players[playerNum].getPlayerHand().get(0));
+        players[playerNum].getPlayerHand().set(0, temp);
+    }
+
     private static Player getCurrentPlayer() {
         return currentPlayer;
     }

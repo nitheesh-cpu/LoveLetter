@@ -81,6 +81,7 @@ public class GamePanel extends JFrame {
             Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
             back.setIcon(new ImageIcon(resize)); //adds card to button
             back.setVisible(true); //shows card
+            GameState.showChancellorAbility();
         });
 
 

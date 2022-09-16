@@ -36,6 +36,7 @@ public class Card {
                 GameState.showBaronAbility();
                 break;
             case CHANCELLOR:
+                GameState.showChancellorAbility();
                 break;
             case HANDMAID:
                 break;
@@ -43,10 +44,12 @@ public class Card {
                 GameState.showPrinceAbility();
                 break;
             case KING:
+                GameState.showKingAbility();
                 break;
             case COUNTESS:
                 break;
             case PRINCESS:
+                GameState.showPrincessAbility();
                 break;
         }
     }
