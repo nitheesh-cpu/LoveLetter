@@ -19,6 +19,12 @@ public class Player {
 
     public void discardCard(Card card){
         card.useCard();
+        playerHand.remove(card);
+        discardCard.add(card);
+    }
+
+    public void discardCardWithoutAbility(Card card){
+        playerHand.remove(card);
         discardCard.add(card);
     }
 

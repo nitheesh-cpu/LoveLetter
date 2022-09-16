@@ -150,6 +150,18 @@ public class GameState {
         JFrame frame = new JFrame("Handmaid Ability");
         JOptionPane.showMessageDialog(frame, "You are protected from all other players' cards until your next turn!");
         //TODO: add protection
+        //Until the start of your next turn,
+        //other players cannot choose you
+        //for their card effects.
+        //In the rare case that all other players still in
+        //the round are “protected” by a Handmaid when
+        //you play a card, do the following:
+        //❧ If that card requires you to choose another
+        //player (Guard, Priest, Baron, King), your
+        //card is played with no effect.
+        //❧ If that card requires you to choose any
+        //player (Prince), then you must choose
+        //yourself for the effect.
     }
 
     public static void showPrinceAbility(){
@@ -255,6 +267,13 @@ public class GameState {
         currentPlayer.getPlayerHand().set(0, players[playerNum].getPlayerHand().get(0));
         players[playerNum].getPlayerHand().set(0, temp);
     }
+
+    public static void showCountessAbility(){
+        JFrame frame = new JFrame("Countess Ability");
+        JOptionPane.showMessageDialog(frame, "You used the Countess Ability!");
+    }
+
+
 
     private static Player getCurrentPlayer() {
         return currentPlayer;
