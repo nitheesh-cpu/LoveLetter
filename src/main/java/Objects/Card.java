@@ -1,5 +1,6 @@
 package Objects;
 
+
 public class Card {
     private CardEnum cardType;
 
@@ -14,4 +15,8 @@ public class Card {
     public void setCardType(CardEnum cardType) {
         this.cardType = cardType;
     }
+    public String toString() {
+        return cardType.toString();
+    }
+
 }

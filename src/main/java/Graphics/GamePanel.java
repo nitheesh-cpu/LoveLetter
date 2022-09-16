@@ -41,7 +41,7 @@ public class GamePanel extends JFrame {
         JLabel turn = new JLabel("Player 1 Turn"); //player turn
         turn.setFont(new Font("Arial", Font.BOLD, 30)); //makes text bigger
         turn.setForeground(Color.BLACK); //text color
-        turn.setLocation(10, 10);
+        turn.setLocation(20, 10);
         turn.setSize(200, 35);
         gameWindow.add(turn);
 
@@ -62,16 +62,16 @@ public class GamePanel extends JFrame {
 
         revalidate();
 
-//        JFrame frame = new JFrame();
-//        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//        frame.setSize(500, 500);
-//        frame.setVisible(true);
-
-
-
-
-
-
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(250, 250);
+        frame.setVisible(true);
+        JLabel discarded = new JLabel("Discarded Cards");
+        discarded.setFont(new Font("Arial", Font.BOLD, 30));
+        discarded.setForeground(Color.WHITE);
+        discarded.setLocation(0, 0);
+        discarded.setSize(200, 20);
+        frame.add(discarded);
 
 
         draw.addActionListener(e -> {
@@ -80,5 +80,12 @@ public class GamePanel extends JFrame {
             back.setIcon(new ImageIcon(resize)); //adds card to button
             back.setVisible(true); //shows card
         });
+
+
+
+
+
+
+
     }
 }
