@@ -2,6 +2,8 @@ package Graphics;
 
 import Game.GameState;
 import Game.Initialize;
+import Objects.Card;
+import Objects.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +13,9 @@ import javax.imageio.ImageIO;
 
 public class GamePanel extends JFrame {
     private final ImageIcon backCard;
-    private JButton back;
+    private static JButton card1;
+    private static JButton card2;
+    private static JButton card3;
     public GamePanel() {
         super("LoveLetterGame");
         JFrame.setDefaultLookAndFeelDecorated(true);
@@ -47,11 +51,23 @@ public class GamePanel extends JFrame {
 
         backCard = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg")); //back of card
         Image resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
-        back = new JButton(new ImageIcon(resized)); //adds card to button
-        back.setVisible(false); //hides card
-        back.setLocation(15, 403); //sets location
-        back.setSize(114, 159); //sets size
-        gameWindow.add(back);
+        card1 = new JButton(new ImageIcon(resized)); //adds card to button
+        card1.setVisible(false); //hides card
+        card1.setLocation(35, 403); //sets location
+        card1.setSize(114, 159); //sets size
+        gameWindow.add(card1);
+
+        card2 = new JButton(new ImageIcon(resized)); //adds card to button
+        card2.setVisible(false); //hides card
+        card2.setLocation(185, 403); //sets location
+        card2.setSize(114, 159); //sets size
+        gameWindow.add(card2);
+
+        card3 = new JButton(new ImageIcon(resized)); //adds card to button
+        card3.setVisible(false); //hides card
+        card3.setLocation(335, 403); //sets location
+        card3.setSize(114, 159); //sets size
+        gameWindow.add(card3);
 
         ImageIcon backCardd = new ImageIcon(GamePanel.class.getClassLoader().getResource("Cards/10.jpg")); //back of card
         resized  = backCard.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
@@ -74,21 +90,26 @@ public class GamePanel extends JFrame {
         frame.add(discarded);
 
 
-
-
         draw.addActionListener(e -> {
-            ImageIcon card = Initialize.cardImages[Initialize.cardMap.get(GameState.getDeck().get(0).getCardType())]; //gets card image from deck
-            Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
-            back.setIcon(new ImageIcon(resize)); //adds card to button
-            back.setVisible(true); //shows card
-            GameState.showChancellorAbility();
+            updateCards();
         });
 
 
 
 
 
+    }
 
-
+    public static void updateCards() {
+        //get current players cards as an array
+        Player player = GameState.getCurrentPlayer();
+        Card[] cards = player.getPlayerHand().toArray(new Card[0]);
+        JButton cardsButtons[] = {card1, card2, card3};
+        for(int i = 0; i < cards.length; i++) {
+            ImageIcon card = Initialize.cardImages[Initialize.cardMap.get(cards[i].getCardType())]; //gets card image from deck
+            Image resize  = card.getImage().getScaledInstance(114,159,Image.SCALE_SMOOTH); //resizes card
+            cardsButtons[i].setIcon(new ImageIcon(resize)); //adds card to button
+            cardsButtons[i].setVisible(true); //shows card
+        }
     }
 }

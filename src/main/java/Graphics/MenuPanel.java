@@ -49,7 +49,7 @@ public class MenuPanel extends JFrame{
 //        add(playerText);
 
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLocation(240, 210);
+        buttonPanel.setLocation(240, 160);
         buttonPanel.setSize(100, 40);
         playButton = new JButton("Play Game");
         playButton.setLocation(125, 210);

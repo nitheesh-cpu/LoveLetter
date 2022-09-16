@@ -77,18 +77,13 @@ public class GameState {
         while (cardInput == null) {
             cardInput = (String) JOptionPane.showInputDialog(frame, "Choose a card to guess", "Guard Input", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         }
-        //get card enum from card name
+        //if player has selected card, they are out
         CardEnum cardEnum = enums[0];
-        System.out.println(cardInput);
         for (int i = 0; i < options.length; i++) {
-            if(options[i].equals(cardInput)) {
+            if (cardInput.equals(options[i])) {
                 cardEnum = enums[i];
-                System.out.println(i);
             }
         }
-        System.out.println(cardEnum);
-        players[playerNum].getPlayerHand().add(new Card(cardEnum));
-        //if player has selected card, they are out
         if(players[playerNum].getPlayerHand().get(0).getCardType() == cardEnum) {
             players[playerNum].setOut(true);
             JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
@@ -189,6 +184,7 @@ public class GameState {
             players[playerNum].setOut(true);
             JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
         }
+        GamePanel.updateCards();
     }
 
     public static void showPrincessAbility(){
@@ -209,8 +205,11 @@ public class GameState {
         if(deck.size() == 0) {
             JOptionPane.showMessageDialog(frame, "There are no more cards in the deck! This card has no effect!");
         }
-        currentPlayer.getPlayerHand().add(deck.remove(0));
-        currentPlayer.getPlayerHand().add(deck.remove(0));
+        else {
+            currentPlayer.getPlayerHand().add(deck.remove(0));
+            currentPlayer.getPlayerHand().add(deck.remove(0));
+        }
+        GamePanel.updateCards();
         String[] playerCards = new String[currentPlayer.getPlayerHand().size()];
         for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
             playerCards[i] = currentPlayer.getPlayerHand().get(i).getCardType().toString();
@@ -227,6 +226,7 @@ public class GameState {
                 break;
             }
         }
+        GamePanel.updateCards();
         if(amtCards == 2) {
             String[] playerCards2 = new String[currentPlayer.getPlayerHand().size()];
             for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
@@ -246,6 +246,7 @@ public class GameState {
                 }
             }
         }
+        GamePanel.updateCards();
 
     }
 
@@ -266,6 +267,7 @@ public class GameState {
         Card temp = currentPlayer.getPlayerHand().get(0);
         currentPlayer.getPlayerHand().set(0, players[playerNum].getPlayerHand().get(0));
         players[playerNum].getPlayerHand().set(0, temp);
+        GamePanel.updateCards();
     }
 
     public static void showCountessAbility(){
@@ -275,7 +277,7 @@ public class GameState {
 
 
 
-    private static Player getCurrentPlayer() {
+    public static Player getCurrentPlayer() {
         return currentPlayer;
     }
 
