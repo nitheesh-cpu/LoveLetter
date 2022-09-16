@@ -32,21 +32,21 @@ public class MenuPanel extends JFrame{
         title.setLocation(100,20);
         add(title);
 
-        JLabel title2 = new JLabel("a card game for 3-6 players");
+        JLabel title2 = new JLabel("a card game for 3 players");
         title2.setFont(new Font("Arial", Font.ITALIC, 15));
         title2.setSize(300, 20);
         title2.setLocation(205,60);
         add(title2);
 
-        SpinnerModel value = new SpinnerNumberModel(3, 3, 6, 1);
-        JSpinner playerInput = new JSpinner(value);
-        playerInput.setBounds(240,120,100,30);
-        win.add(playerInput);
-
-        JLabel playerText = new JLabel("Enter number of players:");
-        playerText.setSize(150,100);
-        playerText.setLocation(225,110);
-        add(playerText);
+//        SpinnerModel value = new SpinnerNumberModel(3, 3, 6, 1);
+//        JSpinner playerInput = new JSpinner(value);
+//        playerInput.setBounds(240,120,100,30);
+//        win.add(playerInput);
+//
+//        JLabel playerText = new JLabel("Enter number of players:");
+//        playerText.setSize(150,100);
+//        playerText.setLocation(225,110);
+//        add(playerText);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLocation(240, 210);
@@ -71,9 +71,9 @@ public class MenuPanel extends JFrame{
         setResizable(false);
 
         playButton.addActionListener(e -> {
-            int players = (int) playerInput.getValue();
+//            int players = (int) playerInput.getValue();
             dispose();
-            new GameState(players);
+            new GameState(3);
         });
 
     }
