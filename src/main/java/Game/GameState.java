@@ -7,12 +7,11 @@ import Objects.Player;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Stack;
 
 public class GameState {
     private static int amtPlayers;
     private static ArrayList<Card> deck;
-    private ArrayList<Card> cardOnTable;
+    private static ArrayList<Card> cardOnTable;
     private static Player[] players;
     private static Player currentPlayer;
 
@@ -96,6 +95,87 @@ public class GameState {
         }
         else {
             JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is not out!");
+        }
+    }
+
+    public static void showPriestAbility(){
+        JFrame frame = new JFrame("Priest Ability");
+        String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        int j = 0;
+        for (int i = 0; i < GameState.getAmtPlayers(); i++) {
+            if(i != GameState.getCurrentPlayer().getNumber()) {
+                playerNums[j] = "Player " + (i+1);
+                j++;
+            }
+        }
+        String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Priest Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        //show input until player chooses a player
+        while (playerInput == null) {
+            playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Priest Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        }
+        int playerNum = Integer.parseInt(playerInput.substring(7))-1;
+        JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " has a " + players[playerNum].getPlayerHand().get(0).getCardType().toString());
+    }
+
+    public static void showBaronAbility(){
+        JFrame frame = new JFrame("Baron Ability");
+        String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        int j = 0;
+        for (int i = 0; i < GameState.getAmtPlayers(); i++) {
+            if(i != GameState.getCurrentPlayer().getNumber()) {
+                playerNums[j] = "Player " + (i+1);
+                j++;
+            }
+        }
+        String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Baron Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        //show input until player chooses a player
+        while (playerInput == null) {
+            playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Baron Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        }
+        int playerNum = Integer.parseInt(playerInput.substring(7))-1;
+        if(players[playerNum].getPlayerHand().get(0).getCardType().getValue() > currentPlayer.getPlayerHand().get(0).getCardType().getValue()) {
+            currentPlayer.setOut(true);
+            JOptionPane.showMessageDialog(frame, "Player " + (currentPlayer.getNumber()+1) + " is out!");
+        }
+        else if(players[playerNum].getPlayerHand().get(0).getCardType().getValue() < currentPlayer.getPlayerHand().get(0).getCardType().getValue()) {
+            players[playerNum].setOut(true);
+            JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
+        }
+        else {
+            JOptionPane.showMessageDialog(frame, "Both players are safe!");
+        }
+    }
+
+    public static void showHandmaidAbility(){
+        JFrame frame = new JFrame("Handmaid Ability");
+        JOptionPane.showMessageDialog(frame, "You are protected from all other players' cards until your next turn!");
+        //TODO: add protection
+    }
+
+    public static void showPrinceAbility(){
+        JFrame frame = new JFrame("Prince Ability");
+        String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        for (int i = 0; i < GameState.getAmtPlayers(); i++) {
+            playerNums[i] = "Player " + (i+1);
+        }
+        String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Prince Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        //show input until player chooses a player
+        while (playerInput == null) {
+            playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Prince Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
+        }
+        int playerNum = Integer.parseInt(playerInput.substring(7))-1;
+        Card discard = players[playerNum].getPlayerHand().remove(0);
+        if(deck.size() > 0) {
+            players[playerNum].getPlayerHand().add(deck.get(0));
+            deck.remove(0);
+        }
+        else {
+            JOptionPane.showMessageDialog(frame, "There are no more cards in the deck!");
+            players[playerNum].getPlayerHand().add(cardOnTable.remove(0));
+        }
+        if(discard.getCardType().getValue() == 9){
+            players[playerNum].setOut(true);
+            JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
         }
     }
 

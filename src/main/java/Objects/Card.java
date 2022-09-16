@@ -30,14 +30,17 @@ public class Card {
                 GameState.showGuardInput();
                 break;
             case PRIEST:
+                GameState.showPriestAbility();
                 break;
             case BARON:
+                GameState.showBaronAbility();
                 break;
             case CHANCELLOR:
                 break;
             case HANDMAID:
                 break;
             case PRINCE:
+                GameState.showPrinceAbility();
                 break;
             case KING:
                 break;
