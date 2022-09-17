@@ -25,9 +25,10 @@ public class Card {
     public void useCard(){
         switch(cardType){
             case SPY:
+                GameState.showSpyAbility();
                 break;
             case GUARD:
-                GameState.showGuardInput();
+                GameState.showGuardAbility();
                 break;
             case PRIEST:
                 GameState.showPriestAbility();

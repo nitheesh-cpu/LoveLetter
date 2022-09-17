@@ -12,10 +12,12 @@ public class GameState {
     private static int amtPlayers;
     private static ArrayList<Card> deck;
     private static ArrayList<Card> cardOnTable;
-    private static Player[] players;
+    public static Player[] players;
     private static Player currentPlayer;
+    private GamePanel gamePanel;
+    private static int currentPlayerIndex;
+    private static int round;
 
-    private GamePanel hehe;
     public GameState(int amtPlayers) {
         Initialize.init(this);
         this.amtPlayers = amtPlayers; //set amount of players
@@ -27,8 +29,12 @@ public class GameState {
             players[i] = new Player(i); //create player
             players[i].addCard(deck.remove(0)); //deal card to player
         }
-        hehe = new GamePanel();
+        gamePanel = new GamePanel();
         currentPlayer = players[0]; //set current player to player 1
+        currentPlayerIndex = 0;
+        round = 1;
+        
+
     }
 
 
@@ -54,12 +60,12 @@ public class GameState {
         return deck;
     }
 
-    public static void showGuardInput() {
+    public static void showGuardAbility() {
         JFrame frame = new JFrame("Guard Input");
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber()) {
+            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
@@ -98,7 +104,7 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber()) {
+            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
@@ -117,7 +123,7 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber()) {
+            if(i != GameState.getCurrentPlayer().getNumber()  && !players[i].isProtected()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
@@ -144,6 +150,7 @@ public class GameState {
     public static void showHandmaidAbility(){
         JFrame frame = new JFrame("Handmaid Ability");
         JOptionPane.showMessageDialog(frame, "You are protected from all other players' cards until your next turn!");
+        getCurrentPlayer().setProtected(true);
         //TODO: add protection
         //Until the start of your next turn,
         //other players cannot choose you
@@ -222,7 +229,7 @@ public class GameState {
         //remove card from hand
         for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
             if(currentPlayer.getPlayerHand().get(i).getCardType().toString().equals(cardInput)) {
-                currentPlayer.discardCard((currentPlayer.getPlayerHand().get(i)));
+                deck.add(currentPlayer.getPlayerHand().remove(i));
                 break;
             }
         }
@@ -254,7 +261,7 @@ public class GameState {
         JFrame frame = new JFrame("King Ability");
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != currentPlayer.getNumber()) {
+            if(i != currentPlayer.getNumber()  && !players[i].isProtected()) {
                 playerNums[i] = "Player " + (i+1);
             }
         }
@@ -273,6 +280,12 @@ public class GameState {
     public static void showCountessAbility(){
         JFrame frame = new JFrame("Countess Ability");
         JOptionPane.showMessageDialog(frame, "You used the Countess Ability!");
+    }
+
+    public static void showSpyAbility(){
+        JFrame frame = new JFrame("Spy Ability");
+        JOptionPane.showMessageDialog(frame, "Player " + (currentPlayer.getNumber()+1) + " discarded a spy card!");
+        currentPlayer.useSpy();
     }
 
 

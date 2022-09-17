@@ -9,6 +9,8 @@ public class Player {
     private int number;
     private boolean isProtected;
     private boolean isOut;
+    private boolean usedSpy1;
+    private boolean usedSpy2;
 
     public Player(int number){
         this.number = number;
@@ -18,9 +20,9 @@ public class Player {
     }
 
     public void discardCard(Card card){
-        card.useCard();
         playerHand.remove(card);
         discardCard.add(card);
+        card.useCard();
     }
 
     public void discardCardWithoutAbility(Card card){
@@ -70,5 +72,31 @@ public class Player {
 
     public boolean isOut() {
         return isOut;
+    }
+
+    public void setProtected(boolean b) {
+        isProtected = b;
+    }
+
+    public boolean isProtected() {
+        return isProtected;
+    }
+
+    public void useSpy() {
+        if(usedSpy1){
+            usedSpy2 = true;
+        } else {
+            usedSpy1 = true;
+        }
+    }
+
+    public int getSpiesUsed() {
+        if(usedSpy1 && usedSpy2){
+            return 2;
+        } else if(usedSpy1 || usedSpy2){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
