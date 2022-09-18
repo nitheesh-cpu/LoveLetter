@@ -119,11 +119,6 @@ public class GamePanel extends JFrame {
                     cardWindow.add(discardedCards[player][row][col]);
                 }
             }
-//            Player p[] = GameState.players;
-//            for(int card = 0; card < p.getPlayerHand().size(); card++){
-//                Card c = p.getPlayerHand().get(card);
-//                System.out.println(c.getName());
-//            }
         }
 
         revalidate();

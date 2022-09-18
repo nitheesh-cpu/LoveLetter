@@ -37,6 +37,10 @@ public class GameState {
 
     }
 
+    public static void newRound(){
+
+    }
+
     public static void nextTurn() {
         if (currentPlayerIndex == amtPlayers - 1) {
             currentPlayerIndex = 0;
@@ -48,6 +52,7 @@ public class GameState {
         }
         if(checkPlayersOut()){
             JOptionPane.showMessageDialog(null, "All other players are out.");
+            players[getLastPlayer()].setPoints(players[getLastPlayer()].getPoints() + 1);
             return;
         }
         else if(currentPlayer.isOut()) {
@@ -66,9 +71,34 @@ public class GameState {
         return count == amtPlayers - 1;
     }
 
+    public static int getLastPlayer(){
+        int lastPlayer = 0;
+        for (int i = 0; i < amtPlayers; i++) {
+            if (!players[i].isOut()){
+                lastPlayer = i;
+            }
+        }
+        return lastPlayer;
+    }
+
+//    public static Object[] checkSpy(){
+//        Object[] spy = new Object[2];
+//        int count = 0;
+//        for (int i = 0; i < amtPlayers; i++) {
+//            if (players[i].isUsedSpy1() || players[i].isUsedSpy2()){
+//                count++;
+//            }
+//        }
+//        return count;
+//    }
 
     public ArrayList<Card> initCards() {
         deck = new ArrayList<>();
+        deck.add(new Card(CardEnum.GUARD));
+        deck.add(new Card(CardEnum.GUARD));
+        deck.add(new Card(CardEnum.GUARD));
+        deck.add(new Card(CardEnum.GUARD));
+        deck.add(new Card(CardEnum.GUARD));
         deck.add(new Card(CardEnum.GUARD));
         deck.add(new Card(CardEnum.PRIEST));
         deck.add(new Card(CardEnum.PRIEST));
@@ -326,7 +356,6 @@ public class GameState {
         JOptionPane.showMessageDialog(frame, "Player " + (currentPlayer.getNumber()+1) + " discarded a spy card!");
         currentPlayer.useSpy();
     }
-
 
 
     public static Player getCurrentPlayer() {
