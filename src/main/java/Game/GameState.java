@@ -16,7 +16,7 @@ public class GameState {
     private static Player currentPlayer;
     private GamePanel gamePanel;
     private static int currentPlayerIndex;
-    private static int round;
+    private static int turn;
 
     public GameState(int amtPlayers) {
         Initialize.init(this);
@@ -32,9 +32,38 @@ public class GameState {
         gamePanel = new GamePanel();
         currentPlayer = players[0]; //set current player to player 1
         currentPlayerIndex = 0;
-        round = 1;
-        
+        turn = 1;
 
+
+    }
+
+    public static void nextTurn() {
+        if (currentPlayerIndex == amtPlayers - 1) {
+            currentPlayerIndex = 0;
+            currentPlayer = players[currentPlayerIndex];
+            turn++;
+        } else {
+            currentPlayerIndex++;
+            currentPlayer = players[currentPlayerIndex];
+        }
+        if(checkPlayersOut()){
+            JOptionPane.showMessageDialog(null, "All other players are out.");
+            return;
+        }
+        else if(currentPlayer.isOut()) {
+            nextTurn();
+        }
+        GamePanel.updateCards();
+    }
+
+    public static boolean checkPlayersOut(){
+        int count = 0;
+        for (int i = 0; i < amtPlayers; i++) {
+            if (players[i].isOut()){
+                count++;
+            }
+        }
+        return count == amtPlayers - 1;
     }
 
 
@@ -76,8 +105,8 @@ public class GameState {
             playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Guard Input", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         }
         int playerNum = Integer.parseInt(playerInput.substring(7))-1;
-        String[] options = {"Guard", "Priest", "Baron", "Handmaid", "Prince", "King", "Countess", "Princess"};
-        CardEnum enums[] = {CardEnum.GUARD, CardEnum.PRIEST, CardEnum.BARON, CardEnum.HANDMAID, CardEnum.PRINCE, CardEnum.KING, CardEnum.COUNTESS, CardEnum.PRINCESS};
+        String[] options = {"Guard", "Priest", "Baron", "Handmaid", "Prince", "Chancellor", "King", "Countess", "Princess"};
+        CardEnum enums[] = {CardEnum.GUARD, CardEnum.PRIEST, CardEnum.BARON, CardEnum.HANDMAID, CardEnum.PRINCE, CardEnum.CHANCELLOR, CardEnum.KING, CardEnum.COUNTESS, CardEnum.PRINCESS};
         String cardInput = (String) JOptionPane.showInputDialog(frame, "Choose a card to guess", "Guard Input", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
         //show input until player chooses a card
         while (cardInput == null) {
@@ -168,9 +197,11 @@ public class GameState {
 
     public static void showPrinceAbility(){
         JFrame frame = new JFrame("Prince Ability");
-        String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        String[] playerNums = new String[GameState.getAmtPlayers()];
+        int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            playerNums[i] = "Player " + (i+1);
+            playerNums[j] = "Player " + (i+1);
+            j++;
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Prince Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
@@ -178,18 +209,24 @@ public class GameState {
             playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Prince Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         }
         int playerNum = Integer.parseInt(playerInput.substring(7))-1;
-        Card discard = players[playerNum].getPlayerHand().remove(0);
-        if(deck.size() > 0) {
+        while( players[playerNum].getPlayerHand().size() > 0) {
+            Card discard = players[playerNum].getPlayerHand().remove(0);
+            if(discard.getCardType().getValue() == 9){
+                players[playerNum].setOut(true);
+                JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
+            }
+        }
+        if(players[playerNum].isOut()){
+            GamePanel.updateCards();
+            return;
+        }
+        else if(deck.size() > 0) {
             players[playerNum].getPlayerHand().add(deck.get(0));
             deck.remove(0);
         }
         else {
             JOptionPane.showMessageDialog(frame, "There are no more cards in the deck!");
             players[playerNum].getPlayerHand().add(cardOnTable.remove(0));
-        }
-        if(discard.getCardType().getValue() == 9){
-            players[playerNum].setOut(true);
-            JOptionPane.showMessageDialog(frame, "Player " + (playerNum+1) + " is out!");
         }
         GamePanel.updateCards();
     }
@@ -248,7 +285,7 @@ public class GameState {
             //remove card from hand
             for (int i = 0; i < currentPlayer.getPlayerHand().size(); i++) {
                 if (currentPlayer.getPlayerHand().get(i).getCardType().toString().equals(cardInput2)) {
-                    currentPlayer.discardCard((currentPlayer.getPlayerHand().get(i)));
+                    deck.add((currentPlayer.getPlayerHand().remove(i)));
                     break;
                 }
             }
@@ -260,9 +297,11 @@ public class GameState {
     public static void showKingAbility(){
         JFrame frame = new JFrame("King Ability");
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
+        int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
             if(i != currentPlayer.getNumber()  && !players[i].isProtected()) {
-                playerNums[i] = "Player " + (i+1);
+                playerNums[j] = "Player " + (i+1);
+                j++;
             }
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "King Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);

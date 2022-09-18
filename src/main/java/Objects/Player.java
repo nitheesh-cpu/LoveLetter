@@ -19,7 +19,7 @@ public class Player {
         points = 0;
     }
 
-    public void discardCard(Card card){
+    public void discard(Card card){
         playerHand.remove(card);
         discardCard.add(card);
         card.useCard();
