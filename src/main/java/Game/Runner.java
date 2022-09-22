@@ -7,6 +7,7 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContras
 public class    Runner {
     public static void main(String[] args) {
         FlatNordIJTheme.setup(); //setup theme
+        Initialize.init();
         MenuPanel menuPanel = new MenuPanel();
     }
 }

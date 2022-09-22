@@ -1,13 +1,18 @@
 package Graphics;
 
 import Game.GameState;
+import Game.Initialize;
 import com.formdev.flatlaf.icons.FlatHelpButtonIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MenuPanel extends JFrame{
     private JButton playButton;
+    private JFrame helpFrame;
 
     public MenuPanel(){
         super("Menu");
@@ -66,12 +71,46 @@ public class MenuPanel extends JFrame{
         help.setIcon(new FlatHelpButtonIcon());
         win.add(help);
 
+        AtomicBoolean helpOpen = new AtomicBoolean(false);
+        help.addActionListener(e -> {
+            if(!helpOpen.get()) {
+                helpOpen.set(true);
+                //create new JFrame to display help
+                helpFrame = new JFrame("Instructions");
+                helpFrame.setSize(500, 770);
+                helpFrame.setLocationRelativeTo(null);
+                helpFrame.setVisible(true);
+                helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                //make JTabbed Pane to hold help and rules from images
+                JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
+                tabbedPane.setSize(500, 700);
+                tabbedPane.setLocation(0, 0);
+                helpFrame.add(tabbedPane);
+                //fill each tab with an image from CardBuffers.help
+                for (int i = 0; i < Initialize.help.length; i++) {
+                    JLabel helpImage = new JLabel(new ImageIcon(Initialize.help[i].getImage().getScaledInstance(500, 700, Image.SCALE_SMOOTH)));
+                    tabbedPane.addTab(""+(i + 1), helpImage);
+                }
+                //on close of helpFrame, set helpOpen to false
+                helpFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        helpOpen.set(false);
+                    }
+                });
+            }
+        });
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
 
         playButton.addActionListener(e -> {
 //            int players = (int) playerInput.getValue();
+            if(helpOpen.get()) {
+                helpFrame.dispose();
+            }
             dispose();
             new GameState(3);
         });

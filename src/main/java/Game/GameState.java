@@ -19,7 +19,6 @@ public class GameState {
     private static int turn;
 
     public GameState(int amtPlayers) {
-        Initialize.init(this);
         this.amtPlayers = amtPlayers; //set amount of players
         deck = initCards(); //initialize deck
         cardOnTable = new ArrayList<>(); //initialize card on table

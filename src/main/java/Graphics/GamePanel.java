@@ -5,12 +5,16 @@ import Game.Initialize;
 import Objects.Card;
 import Objects.CardEnum;
 import Objects.Player;
+import com.formdev.flatlaf.icons.FlatHelpButtonIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.Array;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static Game.GameState.drawCard;
 
@@ -148,6 +152,47 @@ public class GamePanel extends JFrame {
         quit.setLocation(30, 290);
         quit.setVisible(false);
         gameWindow.add(quit);
+
+        JButton help = new JButton();
+        help.setFocusable(false);
+        help.setContentAreaFilled(false);
+        help.setOpaque(false);
+        help.setIcon(new FlatHelpButtonIcon());
+        //place at top right of gameWindow
+        help.setLocation(450, 5);
+        help.setSize(40, 40);
+        gameWindow.add(help);
+
+        AtomicBoolean helpOpen = new AtomicBoolean(false);
+        help.addActionListener(e -> {
+            if(!helpOpen.get()) {
+                helpOpen.set(true);
+                //create new JFrame to display help
+                JFrame helpFrame = new JFrame("Instructions");
+                helpFrame.setSize(500, 770);
+                helpFrame.setLocationRelativeTo(null);
+                helpFrame.setVisible(true);
+                helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+                //make JTabbed Pane to hold help and rules from images
+                JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
+                tabbedPane.setSize(500, 700);
+                tabbedPane.setLocation(0, 0);
+                helpFrame.add(tabbedPane);
+                //fill each tab with an image from CardBuffers.help
+                for (int i = 0; i < Initialize.help.length; i++) {
+                    JLabel helpImage = new JLabel(new ImageIcon(Initialize.help[i].getImage().getScaledInstance(500, 700, Image.SCALE_SMOOTH)));
+                    tabbedPane.addTab(""+(i + 1), helpImage);
+                }
+                //on close of helpFrame, set helpOpen to false
+                helpFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        helpOpen.set(false);
+                    }
+                });
+            }
+        });
 
         //actionlistener for playAgain button
         playAgain.addActionListener(new ActionListener() {
