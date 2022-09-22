@@ -138,14 +138,14 @@ public class GamePanel extends JFrame {
         //create playAgain button to the left of the draw card
         playAgain = new JButton("Play Again");
         playAgain.setSize(150,25);
-        playAgain.setLocation(30, 230);
+        playAgain.setLocation(30, 260);
         playAgain.setVisible(false);
         gameWindow.add(playAgain);
 
         //create quit button to the right of the draw card
         quit = new JButton("Quit");
         quit.setSize(150,25);
-        quit.setLocation(30, 260);
+        quit.setLocation(30, 290);
         quit.setVisible(false);
         gameWindow.add(quit);
 
@@ -160,6 +160,7 @@ public class GamePanel extends JFrame {
                 playAgain.setVisible(false);
                 quit.setVisible(false);
                 draw.setEnabled(true);
+                updateCards();
             }
         });
 
