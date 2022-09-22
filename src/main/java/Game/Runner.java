@@ -1,11 +1,12 @@
 package Game;
 
 import Graphics.MenuPanel;
+import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatDraculaContrastIJTheme;
 
-public class Runner {
+public class    Runner {
     public static void main(String[] args) {
-        FlatDraculaContrastIJTheme.setup(); //setup theme
+        FlatNordIJTheme.setup(); //setup theme
         MenuPanel menuPanel = new MenuPanel();
     }
 }

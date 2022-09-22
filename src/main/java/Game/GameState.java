@@ -33,8 +33,6 @@ public class GameState {
         currentPlayer = players[0]; //set current player to player 1
         currentPlayerIndex = 0;
         turn = 1;
-
-
     }
 
     public static void newRound(){
@@ -53,12 +51,75 @@ public class GameState {
         if(checkPlayersOut()){
             JOptionPane.showMessageDialog(null, "All other players are out.");
             players[getLastPlayer()].setPoints(players[getLastPlayer()].getPoints() + 1);
+            if(checkSpy() != null){
+                checkSpy().setPoints(checkSpy().getPoints() + 1);
+                JOptionPane.showMessageDialog(null, "Player " + (checkSpy().getNumber()+1) + " got a spy token!");
+            }
+            GamePanel.updateCards();
+            resetGame();
             return;
         }
         else if(currentPlayer.isOut()) {
             nextTurn();
         }
+        if(currentPlayer.isProtected()){
+            currentPlayer.setProtected(false);
+        }
         GamePanel.updateCards();
+    }
+
+    public static Card drawCard(){
+        if(GameState.getDeck().size() == 0){
+            //compare cards for winner
+            players[getRoundWinnerByCardValue()].setPoints(players[getRoundWinnerByCardValue()].getPoints() + 1);
+            JOptionPane.showMessageDialog(null, "No more cards in deck");
+            JOptionPane.showMessageDialog(null, "Player " + (getRoundWinnerByCardValue()+1) + " wins the round!");
+            if(checkSpy() != null){
+                checkSpy().setPoints(checkSpy().getPoints() + 1);
+                JOptionPane.showMessageDialog(null, "Player " + (checkSpy().getNumber()+1) + " got a spy token!");
+            }
+            GamePanel.updateCards();
+            //reset deck
+            resetGame();
+            return null;
+        }
+        return GameState.getDeck().remove(0);
+    }
+
+    private static int getRoundWinnerByCardValue() {
+        int[] pointValues = new int[3];
+        for (int i = 0; i < 3; i++) {
+            pointValues[i] = players[i].getPlayerHand().get(0).getCardType().getValue();
+        }
+        int max = pointValues[0];
+        int maxIndex = 0;
+        for (int i = 1; i < pointValues.length; i++) {
+            if (pointValues[i] > max) {
+                max = pointValues[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+
+    public static void checkGameEnd(){
+        int[] pointValues = new int[3];
+        for (int i = 0; i < 3; i++) {
+            pointValues[i] = players[i].getPoints();
+        }
+        int max = pointValues[0];
+        int maxIndex = 0;
+        for (int i = 1; i < pointValues.length; i++) {
+            if (pointValues[i] > max) {
+                max = pointValues[i];
+                maxIndex = i;
+            }
+        }
+        if(max >= 5) {
+            JOptionPane.showMessageDialog(null, "Player " + (maxIndex+1) + " wins the game!");
+            GamePanel.disableButtons();
+            GamePanel.showWinner(maxIndex);
+        }
     }
 
     public static boolean checkPlayersOut(){
@@ -81,18 +142,61 @@ public class GameState {
         return lastPlayer;
     }
 
-//    public static Object[] checkSpy(){
-//        Object[] spy = new Object[2];
-//        int count = 0;
-//        for (int i = 0; i < amtPlayers; i++) {
-//            if (players[i].isUsedSpy1() || players[i].isUsedSpy2()){
-//                count++;
-//            }
-//        }
-//        return count;
-//    }
+    public static void resetGame() {
+        System.out.println("Resetting game");
+        for (int i = 0; i < 3; i++) {
+            players[i].setOut(false);
+            players[i].setProtected(false);
+            players[i].setPlayerHand(new ArrayList<>());
+            players[i].setDiscardCard(new ArrayList<>());
+        }
+        GameState.deck = new ArrayList<>();
+        System.out.println(GameState.deck.size());
+        GameState.deck = initCards();
+        currentPlayerIndex = 0;
+        currentPlayer = players[currentPlayerIndex];
+        dealCards();
+        GamePanel.updateCards();
+        checkGameEnd();
+    }
 
-    public ArrayList<Card> initCards() {
+    public static void resetPlayerPoints(){
+        for (int i = 0; i < 3; i++) {
+            players[i].setPoints(0);
+        }
+    }
+
+    private static void dealCards() {
+        for (int i = 0; i < 3; i++) {
+            players[i].getPlayerHand().add(drawCard());
+        }
+    }
+
+    public static Player checkSpy(){
+        //check if only one player discarded a spy
+        int count = 0;
+        int player = 0;
+        boolean usedSpy1 = false;
+        boolean usedSpy2 = false;
+        Player spyPlayer = null;
+        for (int i = 0; i < amtPlayers; i++) {
+            if (players[i].getSpiesUsed() == 2){
+                return players[i];
+            }
+            else if (players[i].getSpiesUsed() == 1){
+                count++;
+                player ++;
+                spyPlayer = players[i];
+            }
+        }
+        if(player == 1){
+            return spyPlayer;
+        }else{
+            return null;
+        }
+    }
+
+    public static ArrayList<Card> initCards() {
         deck = new ArrayList<>();
         deck.add(new Card(CardEnum.GUARD));
         deck.add(new Card(CardEnum.GUARD));
@@ -124,10 +228,14 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected()) {
+            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected() && !players[i].isOut()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
+        }
+        if (j == 0) {
+            JOptionPane.showMessageDialog(frame, "No players to choose from!");
+            return;
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Guard Input", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
@@ -163,11 +271,17 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected()) {
+            if(i != GameState.getCurrentPlayer().getNumber() && !players[i].isProtected() && !players[i].isOut()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
         }
+        //check if playerNums is empty
+        if (j == 0) {
+            JOptionPane.showMessageDialog(frame, "No players to choose from!");
+            return;
+        }
+
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Priest Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
         while (playerInput == null) {
@@ -182,10 +296,14 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != GameState.getCurrentPlayer().getNumber()  && !players[i].isProtected()) {
+            if(i != GameState.getCurrentPlayer().getNumber()  && !players[i].isProtected() && !players[i].isOut()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
+        }
+        if (j == 0) {
+            JOptionPane.showMessageDialog(frame, "No players to choose from!");
+            return;
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Baron Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
@@ -230,8 +348,14 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            playerNums[j] = "Player " + (i+1);
-            j++;
+            if(!players[i].isOut() && !players[i].isProtected()) {
+                playerNums[j] = "Player " + (i+1);
+                j++;
+            }
+        }
+        if (j == 0) {
+            JOptionPane.showMessageDialog(frame, "No players to choose from!");
+            return;
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "Prince Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
@@ -251,8 +375,7 @@ public class GameState {
             return;
         }
         else if(deck.size() > 0) {
-            players[playerNum].getPlayerHand().add(deck.get(0));
-            deck.remove(0);
+            players[playerNum].getPlayerHand().add(drawCard());
         }
         else {
             JOptionPane.showMessageDialog(frame, "There are no more cards in the deck!");
@@ -272,16 +395,15 @@ public class GameState {
         JOptionPane.showMessageDialog(frame, "You can draw the top 2 cards of the deck!");
         int amtCards = 2;
         if(deck.size() == 1) {
-            currentPlayer.getPlayerHand().add(deck.get(0));
-            deck.remove(0);
+            currentPlayer.getPlayerHand().add(drawCard());
             amtCards--;
         }
         if(deck.size() == 0) {
             JOptionPane.showMessageDialog(frame, "There are no more cards in the deck! This card has no effect!");
         }
         else {
-            currentPlayer.getPlayerHand().add(deck.remove(0));
-            currentPlayer.getPlayerHand().add(deck.remove(0));
+            currentPlayer.getPlayerHand().add(drawCard());
+            currentPlayer.getPlayerHand().add(drawCard());
         }
         GamePanel.updateCards();
         String[] playerCards = new String[currentPlayer.getPlayerHand().size()];
@@ -329,10 +451,14 @@ public class GameState {
         String[] playerNums = new String[GameState.getAmtPlayers()-1];
         int j = 0;
         for (int i = 0; i < GameState.getAmtPlayers(); i++) {
-            if(i != currentPlayer.getNumber()  && !players[i].isProtected()) {
+            if(i != currentPlayer.getNumber()  && !players[i].isProtected() && !players[i].isOut()) {
                 playerNums[j] = "Player " + (i+1);
                 j++;
             }
+        }
+        if (j == 0) {
+            JOptionPane.showMessageDialog(frame, "No players to choose from!");
+            return;
         }
         String playerInput = (String) JOptionPane.showInputDialog(frame, "Choose a player", "King Ability", JOptionPane.QUESTION_MESSAGE, null, playerNums, playerNums[0]);
         //show input until player chooses a player
@@ -368,5 +494,22 @@ public class GameState {
 
     public static ArrayList<Card> getDeck() {
         return deck;
+    }
+
+    public static void playAgain() {
+        System.out.println("Resetting game");
+        for (int i = 0; i < 3; i++) {
+            players[i].setOut(false);
+            players[i].setProtected(false);
+            players[i].setPlayerHand(new ArrayList<>());
+            players[i].setDiscardCard(new ArrayList<>());
+        }
+        GameState.deck = new ArrayList<>();
+        System.out.println(GameState.deck.size());
+        GameState.deck = initCards();
+        currentPlayerIndex = 0;
+        currentPlayer = players[currentPlayerIndex];
+        dealCards();
+        GamePanel.updateCards();
     }
 }
