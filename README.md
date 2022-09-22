@@ -4,7 +4,7 @@ This project is a recreation of the card game _Love Letter_ in Java. The graphic
 
 ### How to Play
 
-[View the official rules](https://www.catan.com/sites/prod/files/2021-06/catan_base_rules_2020_200707.pdf](https://images.zmangames.com/filer_public/5b/6c/5b6c17d7-7e0e-4b70-a311-9a6c32066010/ll-rulebook.pdf)
+[View the official rules](https://images.zmangames.com/filer_public/5b/6c/5b6c17d7-7e0e-4b70-a311-9a6c32066010/ll-rulebook.pdf)
 
 To view the instructions while using the application, press the "Help" button or the "?" button in game to view them.
 
